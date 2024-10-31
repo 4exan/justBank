@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: auth-service
+          uri:
+            lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/v1/auth/**
+
+        - id: account-service
+          uri:
+            lb://ACCOUNT-SERVICE
+          predicates:
+            - Path=/api/v1/account/**
+          filters:
+            - AuthFilter
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+              - "http://localhost:5173"
+              - "http://127.0.0.1:5173"
+            allowed-headers:
+              - "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allow-credentials: true
+            max-age: 3600
+
+  main:
+    web-application-type: reactive
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      username: default
+      password: 4kTtH2ddXfN2sFmXE6sowOLukxiaJhN8n
+
+server:
+  port: 8765
+
+eureka:
+  instance:
+    hostname: localhost

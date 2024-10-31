@@ -1,0 +1,5 @@
+package ua.kusakabe.util;
+
+public enum AccountStatus {
+    ACTIVE,INACTIVE,BLOCKED,CLOSED,PENDING,SUSPENDED,UNDER_REVIEW,FRAUDULENT,TERMINATED
+}
