@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await AuthService.tokenValidation(payload);
       console.log(response);
-      if (response === 200) {
+      if (response === "OK") {
         login();
       } else {
         logout();
