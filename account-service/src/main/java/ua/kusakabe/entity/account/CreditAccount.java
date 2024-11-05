@@ -9,12 +9,10 @@ import lombok.*;
 @Getter @Setter
 public class CreditAccount extends Account {
 
-    private String number;
     private int creditLimit;
 
     private CreditAccount(Builder builder) {
         super(builder);
-        this.number = builder.number;
         this.creditLimit = builder.creditLimit;
     }
 
@@ -23,13 +21,7 @@ public class CreditAccount extends Account {
     }
 
     public static class Builder extends Account.Builder<Builder> {
-        private String number;
         private int creditLimit;
-
-        public Builder number(String number){
-            this.number = number;
-            return this;
-        }
 
         public Builder creditLimit(int creditLimit) {
             this.creditLimit = creditLimit;

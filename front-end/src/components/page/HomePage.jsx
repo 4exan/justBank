@@ -65,7 +65,7 @@ export default function HomePage() {
               </div>
             </div>
           )}
-          <div className="p-2">
+          <div className="py-2">
             <div className=" bg-white bg-opacity-5 rounded-xl p-2 mr-2 ml-2">
               <img
                 src="https://d1fufvy4xao6k9.cloudfront.net/images/blog/posts/2022/11/imagetools6.jpg"

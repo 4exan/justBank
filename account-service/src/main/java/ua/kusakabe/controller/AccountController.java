@@ -31,4 +31,9 @@ public class AccountController {
         return accountService.createNewAccount(req, header);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public HttpStatus deleteAccount(@RequestHeader(HttpHeaders.AUTHORIZATION) String header, @PathVariable String id) {
+        return accountService.deleteAccount(header, id);
+    }
+
 }

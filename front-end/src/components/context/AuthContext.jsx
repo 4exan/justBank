@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AuthService from "../service/AuthService";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
         logout();
       }
     } catch (e) {
+      logout();
       throw e;
     }
   };
@@ -39,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     AuthService.logout();
     setIsAuthencticated(false);
     setIsAdmin(false);
+    navigate("/home");
   };
 
   return (

@@ -12,12 +12,13 @@ import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Getter
+@Getter @Setter
 public abstract class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long accountId;
+    private String accountNumber;
     private long userId;
     private AccountType type;
     private AccountCurrency currency;
@@ -34,6 +35,7 @@ public abstract class Account {
 
     protected Account(Builder<?> builder){
         this.accountId = builder.accountId;
+        this.accountNumber = builder.accountNumber;
         this.userId = builder.userId;
         this.type = builder.type;
         this.currency = builder.currency;
@@ -48,6 +50,7 @@ public abstract class Account {
 
     public static abstract class Builder<B extends Builder<B>> {
         private long accountId;
+        private String accountNumber;
         private long userId;
         private AccountType type;
         private AccountCurrency currency;
@@ -61,6 +64,11 @@ public abstract class Account {
 
         public B accountId(long accountId) {
             this.accountId = accountId;
+            return self();
+        }
+
+        public B accountNumber(String accountNumber) {
+            this.accountNumber = accountNumber;
             return self();
         }
 

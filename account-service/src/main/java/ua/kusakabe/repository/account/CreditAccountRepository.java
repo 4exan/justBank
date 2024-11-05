@@ -6,5 +6,5 @@ import ua.kusakabe.entity.account.CreditAccount;
 
 @Repository
 public interface CreditAccountRepository extends JpaRepository<CreditAccount, Long> {
-    boolean existsByNumber(String number);
+    boolean existsByAccountNumber(String accountNumber);
 }

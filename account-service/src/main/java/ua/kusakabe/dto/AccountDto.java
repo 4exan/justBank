@@ -23,7 +23,7 @@ public class AccountDto {
 
     private long accountId;
     private long userId;
-    private String number;
+    private String accountNumber;
     private AccountType type;
     private AccountCurrency currency;
     private BigDecimal balance;

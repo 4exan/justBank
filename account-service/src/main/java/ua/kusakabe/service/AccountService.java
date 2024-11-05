@@ -97,7 +97,7 @@ public class AccountService {
     private Account createNewCheckingAccount(AccountDto req, long userId) {
         return new CheckingAccount.Builder()
                 .userId(userId)
-                .number(generateAccountNumber(req.getType()))
+                .accountNumber(generateAccountNumber(req.getType()))
                 .type(AccountType.CHECKING)
                 .currency(req.getCurrency())
                 .balance(BigDecimal.ZERO)
@@ -111,6 +111,7 @@ public class AccountService {
     private Account createNewCreditAccount(AccountDto req, long userId) {
         return new CreditAccount.Builder()
                 .userId(userId)
+                .accountNumber(generateAccountNumber(req.getType()))
                 .type(AccountType.CREDIT)
                 .currency(req.getCurrency())
                 .balance(BigDecimal.ZERO)
@@ -124,6 +125,7 @@ public class AccountService {
     private Account createNewSavingsAccount(AccountDto req, long userId) {
         return new SavingsAccount.Builder()
                 .userId(userId)
+                .accountNumber(generateAccountNumber(req.getType()))
                 .type(AccountType.CREDIT)
                 .currency(req.getCurrency())
                 .balance(BigDecimal.ZERO)
@@ -138,6 +140,7 @@ public class AccountService {
     private Account createNewFixedDepositAccount(AccountDto req, long userId) {
         return new FixedDepositAccount.Builder()
                 .userId(userId)
+                .accountNumber(generateAccountNumber(req.getType()))
                 .type(AccountType.CREDIT)
                 .currency(req.getCurrency())
                 .balance(BigDecimal.ZERO)
@@ -180,7 +183,7 @@ public class AccountService {
 
     private boolean isCheckingAccountAvailable(String accNumber) {
         try{
-            return !checkingAccountRepository.existsByNumber(accNumber);
+            return !checkingAccountRepository.existsByAccountNumber(accNumber);
         } catch (RuntimeException e) {
             throw new RuntimeException("Checking account failed!", e);
         }
@@ -188,7 +191,7 @@ public class AccountService {
 
     private boolean isCreditAccountAvailable(String accNumber) {
         try{
-            return !creditAccountRepository.existsByNumber(accNumber);
+            return !creditAccountRepository.existsByAccountNumber(accNumber);
         } catch (RuntimeException e) {
             throw new RuntimeException("Checking account failed!", e);
         }
@@ -196,7 +199,7 @@ public class AccountService {
 
     private boolean isSavingsAccountAvailable(String accNumber) {
         try{
-            return !savingsAccountRepository.existsByNumber(accNumber);
+            return !savingsAccountRepository.existsByAccountNumber(accNumber);
         } catch (RuntimeException e) {
             throw new RuntimeException("Checking account failed!", e);
         }
@@ -204,10 +207,23 @@ public class AccountService {
 
     private boolean isFixedDepositAccountAvailable(String accNumber) {
         try{
-            return !fixedDepositAccountRepository.existsByNumber(accNumber);
+            return !fixedDepositAccountRepository.existsByAccountNumber(accNumber);
         } catch (RuntimeException e) {
             throw new RuntimeException("Checking account failed!", e);
         }
     }
 
+    public HttpStatus deleteAccount(String header, String id) {
+        boolean isAdmin = getUserRole(header);
+        if(!isAdmin){
+            return HttpStatus.FORBIDDEN;
+        }
+        customerRepository.deleteById(Long.parseLong(id));
+        return HttpStatus.OK;
+    }
+
+    private boolean getUserRole(String header) {
+        String phone = jwtService.extractPhone(header.substring(7));
+        return customerRepository.isAdminByPhone(phone);
+    }
 }

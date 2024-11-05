@@ -12,13 +12,11 @@ import java.util.Date;
 @Getter @Setter
 public class FixedDepositAccount extends Account{
 
-    private String number;
     private Date balanceLockedTo;
     private double interestRate;
 
     private FixedDepositAccount(Builder builder) {
         super(builder);
-        this.number = builder.number;
         this.balanceLockedTo = builder.balanceLockedTo;
         this.interestRate = builder.interestRate;
     }
@@ -28,14 +26,8 @@ public class FixedDepositAccount extends Account{
     }
 
     public static class Builder extends Account.Builder<Builder> {
-        private String number;
         private Date balanceLockedTo;
         private double interestRate;
-
-        public Builder number(String number){
-            this.number = number;
-            return this;
-        }
 
         public Builder balanceLockedTo(Date balanceLockedTo) {
             this.balanceLockedTo = balanceLockedTo;

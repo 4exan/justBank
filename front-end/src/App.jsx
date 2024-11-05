@@ -6,6 +6,7 @@ import Navbar from "./components/common/Navbar";
 import HomePage from "./components/page/HomePage";
 import ErrorPage from "./components/page/ErrorPage";
 import Dashboard from "./components/page/Dashboard";
+import PremiumPage from "./components/page/PremiumPage";
 
 function App() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/premium" element={<PremiumPage />} />
             {isAuthenticated && <>{/* Routes for authenticated users*/}</>}
             {/* Check if user is authenticated and admin before rendering admin-only routes */}
             {isAdmin && <>{/* Routes for ADMIN roles*/}</>}

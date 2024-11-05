@@ -3,7 +3,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes l6 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 body {
   background-color: #25272d;
   font-family: "Roboto", sans-serif;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 40px;
+  aspect-ratio: 1;
+  background: #b1ee81;
+  animation: l1 1s infinite;
+}
+@keyframes l1 {
+  0% {
+    transform: perspective(150px) rotateX(0deg);
+  }
+  100% {
+    transform: perspective(150px) rotateX(180deg);
+  }
 }

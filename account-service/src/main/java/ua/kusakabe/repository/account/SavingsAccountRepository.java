@@ -6,5 +6,5 @@ import ua.kusakabe.entity.account.SavingsAccount;
 
 @Repository
 public interface SavingsAccountRepository extends JpaRepository<SavingsAccount, Long> {
-    boolean existsByNumber(String number);
+    boolean existsByAccountNumber(String accountNumber);
 }

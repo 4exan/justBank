@@ -1,0 +1,8 @@
+Transactions:
+
+1) Regular account can only send money to accounts with the same currency.
+2) To send money from/to account with different currencies, customer need to have international account.
+3) Transaction count as valid if:
+    - Sender and receiver have proper currencies for transaction;
+    - Sender and receiver have account status 'ACTIVE';
+    - Sender have enough money on balance;

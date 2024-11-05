@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import LoginModal from "../modal/LoginModal";
 
 export default function Navbar() {
-  const [activePage, setActivePage] = useState("");
+  const [activePage, setActivePage] = useState("dashboard");
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const { isAuthenticated, isAdmin } = useAuth();
@@ -23,7 +23,7 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/"
-                className="p-2 text-base bg-green-1 rounded-full font-semibold transition-all hover:bg-white hover:text-base"
+                className="p-2 text-base bg-green-1 rounded-full transition-all hover:bg-white hover:text-base"
               >{`Home`}</Link>
             </li>
           }
