@@ -27,20 +27,13 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
-    private final CheckingAccountRepository checkingAccountRepository;
-    private final CreditAccountRepository creditAccountRepository;
-    private final SavingsAccountRepository savingsAccountRepository;
-    private final FixedDepositAccountRepository fixedDepositAccountRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(TransactionService.class);
+    private String failureReason;
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository, CheckingAccountRepository checkingAccountRepository, CreditAccountRepository creditAccountRepository, SavingsAccountRepository savingsAccountRepository, FixedDepositAccountRepository fixedDepositAccountRepository) {
+    public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
-        this.checkingAccountRepository = checkingAccountRepository;
-        this.creditAccountRepository = creditAccountRepository;
-        this.savingsAccountRepository = savingsAccountRepository;
-        this.fixedDepositAccountRepository = fixedDepositAccountRepository;
     }
 
     @Transactional
@@ -57,7 +50,7 @@ public class TransactionService {
 
     private void rollbackTransaction(Transaction transaction) {
         transaction.setTransactionStatus(TransactionStatus.ROLLED_BACK);
-        transaction.setFailureReason("Invalid transaction");
+        transaction.setFailureReason(failureReason);
         transaction.setCompletedAt(new Date(System.currentTimeMillis()));
         saveTransaction(transaction);
         LOGGER.error("Transaction {} rolled back", transaction.getId());
@@ -114,17 +107,32 @@ public class TransactionService {
 
     private boolean validateCurrencies(ValidationForm validationForm) {
         String transactionCurrency = validationForm.getTransaction().getCurrency();
-        return validationForm.getReceiverAccount().getCurrency().toString().equals(transactionCurrency) && validationForm.getSenderAccount().getCurrency().toString().equals(transactionCurrency);
+        if(validationForm.getReceiverAccount().getCurrency().toString().equals(transactionCurrency) && validationForm.getSenderAccount().getCurrency().toString().equals(transactionCurrency)){
+            return true;
+        } else {
+            failureReason = "Invalid account currencies";
+            return false;
+        }
     }
 
     private boolean validateAccountStatus(ValidationForm validationForm) {
-        return validationForm.getSenderAccount().getStatus().toString().equals(AccountStatus.ACTIVE.toString()) && validationForm.getReceiverAccount().getStatus().toString().equals(AccountStatus.ACTIVE.toString());
+        if(validationForm.getSenderAccount().getStatus().toString().equals(AccountStatus.ACTIVE.toString()) && validationForm.getReceiverAccount().getStatus().toString().equals(AccountStatus.ACTIVE.toString())){
+            return true;
+        } else {
+            failureReason = "Invalid account status";
+            return false;
+        }
     }
 
     private boolean validateAccountBalance(ValidationForm validationForm) {
         BigDecimal senderBalance = validationForm.getSenderAccount().getBalance();
         BigDecimal transactionAmount = validationForm.getTransaction().getAmount();
-        return senderBalance.subtract(transactionAmount).compareTo(BigDecimal.ZERO) >= 0;
+        if(senderBalance.subtract(transactionAmount).compareTo(BigDecimal.ZERO) >= 0){
+            return true;
+        } else {
+            failureReason = "Invalid account balance";
+            return false;
+        }
     }
 
     private Account findAccountByNumber(String accountNumber) {
@@ -133,16 +141,5 @@ public class TransactionService {
         } catch (Exception e) {
             throw new NotFoundException(e.getMessage());
         }
-//        return switch(accountNumber.substring(0, 3)){
-//            case "CHK" -> findChekingAccount(accountNumber);
-//            case "CRD" -> findCreditAccount(accountNumber);
-//            case "SAV" -> findSavingAccount(accountNumber);
-//            case "FDS" -> findFixedDepositAccount(accountNumber);
-//        };
-//        try{
-//            return accountRepository.findAccountByAccountId(senderAccountNumber);
-//        } catch (Exception e){
-//            throw new RuntimeException("No such account");
-//        }
     }
 }

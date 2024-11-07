@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ua.kusakabe.dto.TransactionDto;
+import ua.kusakabe.dto.TransactionStatistics;
 import ua.kusakabe.entity.Transaction;
 import ua.kusakabe.kafka.JsonKafkaProducer;
 import ua.kusakabe.repository.TransactionRepository;
@@ -67,14 +68,37 @@ public class TransactionService {
 
     public TransactionDto getAllTransactions(String accountNumber) {
         TransactionDto res = new TransactionDto();
-        List<Transaction> transactionList = getAllByAccountNumber(accountNumber);
-        res.setTransactionList(transactionList);
+        //HERE I SWAP TWO VARIABLE NAMES, IT'S HERE!!!
+        res.setOutgoingTransactionList(getAllIncomingByAccountNumber(accountNumber));
+        res.setIncomingTransactionList(getAllOutgoingByAccountNumber(accountNumber));
+        res.setTransactionStatistics(calculateTransactionStatistics(accountNumber));
         return res;
     }
 
-    private List<Transaction> getAllByAccountNumber(String accountNumber) {
+    private TransactionStatistics calculateTransactionStatistics(String accountNumber) {
+        return TransactionStatistics.builder()
+                .monthTotalIncome(transactionRepository.sumReceivedAmountCurrentMonth(accountNumber).orElse(0.0))
+                .monthTotalSpending(transactionRepository.sumSentAmountCurrentMonth(accountNumber).orElse(0.0))
+                .lastMonthTotalIncome(transactionRepository.sumReceivedAmountPreviousMonth(accountNumber).orElse(0.0))
+                .lastMonthTotalSpending(transactionRepository.sumSentAmountPreviousMonth(accountNumber).orElse(0.0))
+                .build();
+    }
+
+    private List<Transaction> getAllIncomingByAccountNumber(String accountNumber) {
         try{
-            List<Transaction> transactionList = transactionRepository.findAllBySenderAccountNumber(accountNumber);
+            List<Transaction> transactionList = transactionRepository.findAllBySenderAccountNumberAndTransactionStatus(accountNumber, TransactionStatus.COMMITTED);
+            if(!transactionList.isEmpty()){
+                return transactionList;
+            }
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found");
+        }
+        return null; //REMOVE !!!!!!!
+    }
+
+    private List<Transaction> getAllOutgoingByAccountNumber(String accountNumber) {
+        try{
+            List<Transaction> transactionList = transactionRepository.findAllByReceiverAccountNumberAndTransactionStatus(accountNumber, TransactionStatus.COMMITTED);
             if(!transactionList.isEmpty()){
                 return transactionList;
             }

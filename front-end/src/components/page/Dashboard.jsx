@@ -1,28 +1,55 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import AccountService from "../service/AccountService";
+import TransactionService from "../service/TransactionService";
 
 export default function Dashboard() {
+  const { logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
-  const [activeAccount, setActiveAccount] = useState({
-    accountId: 1,
-    userId: 1,
-    type: "CHECKING",
-    currency: "UAH",
-    balance: 0.0,
-    createdAt: "2024-10-31T10:49:39.530+00:00",
-    updatedAt: "2024-10-31T10:49:39.530+00:00",
-    status: "ACTIVE",
-    active: false,
-    twoFactorEnabled: false,
-    number: "CHK95197252",
-    overdraftLimit: 5000.0,
-  });
+  const [activeAccount, setActiveAccount] = useState({});
+  const [transactionsType, setTransactionsType] = useState("Incoming");
+  const [incomingTransactions, setIncomingTransactions] = useState([]);
+  const [outgoingTransactions, setOutgoingTransactions] = useState([]);
+  const [transactionStatistic, setTransactionStatistic] = useState({});
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [activeAccount, transactionsType]);
+
+  const fetchTransactions = async () => {
+    setLoading(true);
+    setIncomingTransactions([]);
+    setOutgoingTransactions([]);
+    try {
+      const token = localStorage.getItem("token");
+      const transactionData = await TransactionService.getAllTransaction(
+        token,
+        activeAccount.accountNumber,
+      );
+      console.log(transactionData);
+      if (transactionData?.incomingTransactionList) {
+        setIncomingTransactions(() => transactionData.incomingTransactionList);
+      } else {
+        console.log("No incoming transactions");
+      }
+      if (transactionData?.outgoingTransactionList) {
+        setOutgoingTransactions(() => transactionData.outgoingTransactionList);
+      } else {
+        console.log("No outgoing transactions");
+      }
+      setTransactionStatistic(() => transactionData.transactionStatistics);
+    } catch (e) {
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -32,6 +59,7 @@ export default function Dashboard() {
       if (accountData?.accountList) {
         setAccounts(() => accountData.accountList);
         setActiveAccount(() => accountData.accountList[0]);
+        console.log(accounts);
       } else {
         console.log("Empty data!");
       }
@@ -42,31 +70,48 @@ export default function Dashboard() {
     }
   };
 
-  const handleChange = (e) => {
+  const handleAccountChange = (e) => {
     const selectedValue = e.target.value;
     const selectedAccount = accounts.find(
-      (account) => account.number === selectedValue,
+      (account) => account.accountNumber === selectedValue,
     );
     setActiveAccount(selectedAccount);
+  };
+
+  const handleTransactionTypeChange = (e) => {
+    const selectedType = e.target.value;
+    setTransactionsType(selectedType);
+    console.log(`Selected type: ${transactionsType}`);
   };
 
   if (!loading) {
     return (
       <>
-        <div className="p-4">
-          <div className="">
-            <select
-              className="p-2 ml-2 bg-surface-1 rounded-xl text-green-1"
-              onChange={handleChange}
-            >
-              {accounts.map((account) => (
-                <option
-                  key={account.accountId}
-                  value={account.number}
-                >{`${account.type} ${account.currency} ${account.number}`}</option>
-              ))}
-            </select>
-          </div>
+        <div className="px-4">
+          <ul className="flex">
+            <li>
+              <select
+                className="p-2 ml-2 bg-surface-1 rounded-xl text-green-1"
+                onChange={(e) => handleAccountChange(e)}
+                value={activeAccount.accountNumber}
+              >
+                {accounts.map((account) => (
+                  <option
+                    key={account.accountId}
+                    value={account.accountNumber}
+                  >{`${account.type} ${account.currency} ${account.accountNumber}`}</option>
+                ))}
+              </select>
+            </li>
+            <li className="ml-auto">
+              <button
+                className="p-2 text-text font-semibold bg-red-500 rounded-xl transition-all hover:bg-white hover:text-base"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            </li>
+          </ul>
           <div className="flex">
             {/* LEFT SEGMENT */}
             <div className="w-1/3 p-2">
@@ -77,22 +122,51 @@ export default function Dashboard() {
                     {`${activeAccount.balance} ${activeAccount.currency}`}
                   </h1>
                 </div>
-                <div className="mt-4 p-2 bg-white bg-opacity-5 rounded-2xl">
-                  <h1 className="font-light text-xl text-subtext">
-                    Monthly total:
-                  </h1>
-                  <div className="p-2">
+              </div>
+              <div className="">
+                <div className="mt-2 p-2 bg-white bg-opacity-5 rounded-3xl">
+                  <p className="text-xl text-subtext">Monthly total:</p>
+                  <div className="mt-2 p-2 bg-white bg-opacity-5 rounded-xl">
                     <div className="py-2 flex justify-between text-subtext border-b border-gray-500">
                       <p className="text-xl inline">Income:</p>
-                      <p className="text-3xl inline ml-auto">TODO</p>
+                      <p className="text-3xl inline ml-auto">
+                        {transactionStatistic.monthTotalIncome}{" "}
+                        <span className="text-lg">
+                          {activeAccount.currency}
+                        </span>
+                      </p>
                     </div>
                     <div className="py-2 flex justify-between text-subtext">
                       <p className="text-xl inline">Spending:</p>
-                      <p className="text-3xl inline ml-auto">TODO</p>
+                      <p className="text-3xl inline ml-auto">
+                        {transactionStatistic.monthTotalSpending}{" "}
+                        <span className="text-lg">
+                          {activeAccount.currency}
+                        </span>
+                      </p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-surface-0 rounded-xl"></div>
+              </div>
+
+              <div className="mt-2 p-2 bg-surface-0 rounded-3xl">
+                <p className="text-xl text-subtext">Previous month:</p>
+                <div className="mt-2 p-2 bg-white bg-opacity-5 rounded-xl">
+                  <div className="py-2 flex justify-between text-subtext border-b border-gray-500">
+                    <p className="text-xl inline">Income:</p>
+                    <p className="text-3xl inline ml-auto">
+                      {transactionStatistic.lastMonthTotalIncome}{" "}
+                      <span className="text-lg">{activeAccount.currency}</span>
+                    </p>
+                  </div>
+                  <div className="py-2 flex justify-between text-subtext">
+                    <p className="text-xl inline">Spending:</p>
+                    <p className="text-3xl inline ml-auto">
+                      {transactionStatistic.lastMonthTotalSpending}{" "}
+                      <span className="text-lg">{activeAccount.currency}</span>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
             {/* MIDDLE SEGMENT */}
@@ -103,7 +177,9 @@ export default function Dashboard() {
                 </p>
                 <p className="text-subtext text-lg font-semibold mt-2">
                   Account number:{" "}
-                  <span className="font-normal">{activeAccount.number}</span>
+                  <span className="font-normal">
+                    {activeAccount.accountNumber}
+                  </span>
                 </p>
                 <p className="text-subtext text-lg font-semibold">
                   Created at:{" "}
@@ -124,8 +200,54 @@ export default function Dashboard() {
               </div>
             </div>
             {/* RIGHT SEGMENT */}
-            <div className="w-1/3 border border-gray-500">
-              <p>Third segment</p>
+            <div className="w-1/3">
+              <div className="mt-2 p-2 bg-surface-0 rounded-3xl">
+                <ul className="flex">
+                  <li>
+                    <p className="text-xl text-subtext">Transactions:</p>
+                  </li>
+                  <li className="ml-auto mr-2">
+                    <select
+                      className="bg-surface-0 text-lg text-subtext"
+                      onChange={(e) => handleTransactionTypeChange(e)}
+                      value={transactionsType}
+                    >
+                      <option value={"Incoming"}>Incoming</option>
+                      <option value={"Outgoing"}>Outgoing</option>
+                    </select>
+                  </li>
+                </ul>
+                <div className=" my-2 p-2 rounded-xl">
+                  {transactionsType === "Incoming"
+                    ? incomingTransactions.map((t) => (
+                        <div
+                          className={`bg-white bg-opacity-5 rounded-3xl p-2 my-2 flex`}
+                        >
+                          <p className="text-subtext text-lg">
+                            <span className="text-lg font-semibold text-green-0">
+                              +{" "}
+                            </span>
+                            <span className="text-text">
+                              {t.amount} {t.currency}
+                            </span>{" "}
+                            {t.description}
+                          </p>
+                          <button className="ml-auto px-2 bg-green-1 rounded-full transition-all hover:bg-white hover:text-base">{`>`}</button>
+                        </div>
+                      ))
+                    : outgoingTransactions.map((t) => (
+                        <div
+                          className={`bg-white bg-opacity-5 rounded-3xl p-2 my-2`}
+                        >
+                          <p className="text-subtext text-lg">
+                            {t.transactionType} {t.receiverAccount} {t.amount}{" "}
+                            {t.currency} {t.transactionStatus} {t.completedAt}{" "}
+                            {t.description}
+                          </p>
+                        </div>
+                      ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

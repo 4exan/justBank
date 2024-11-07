@@ -1,5 +1,7 @@
 package ua.kusakabe.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 import ua.kusakabe.entity.Transaction;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionDto {
     private UUID id;
     private TransactionType transactionType;
@@ -24,5 +28,7 @@ public class TransactionDto {
     private String description;
     private BigDecimal fee;
 
-    List<Transaction> transactionList;
+    List<Transaction> incomingTransactionList;
+    List<Transaction> outgoingTransactionList;
+    private TransactionStatistics transactionStatistics;
 }

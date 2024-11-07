@@ -70,16 +70,16 @@ public class AccountService {
     public HttpStatus createNewAccount(AccountDto req, String header) {
         long userId = getUserIdFromToken(header);
         Account account = createAccount(req, userId);
-        return saveNewAccount(account);
+        return saveAccount(account);
     }
 
-    private HttpStatus saveNewAccount(Account account) {
+    private HttpStatus saveAccount(Account account) {
         try{
             accountRepository.save(account);
-            LOGGER.info("Account: {} successfully created!", account.getAccountId());
+            LOGGER.info("Account: {} successfully saved!", account.getAccountId());
             return HttpStatus.CREATED;
         } catch (RuntimeException e) {
-            LOGGER.error("Account creation failed!", e);
+            LOGGER.error("Account saving failed!", e);
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }
@@ -213,12 +213,14 @@ public class AccountService {
         }
     }
 
-    public HttpStatus deleteAccount(String header, String id) {
+    public HttpStatus suspendAccount(String header, String accountNumber) {
         boolean isAdmin = getUserRole(header);
         if(!isAdmin){
             return HttpStatus.FORBIDDEN;
         }
-        customerRepository.deleteById(Long.parseLong(id));
+        Account account = accountRepository.findAccountByAccountNumber(accountNumber);
+        account.setStatus(AccountStatus.SUSPENDED);
+        saveAccount(account);
         return HttpStatus.OK;
     }
 
