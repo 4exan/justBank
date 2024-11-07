@@ -61,7 +61,9 @@ public class TransactionService {
         Account senderAccount = validationForm.getSenderAccount();
         Account receiverAccount = validationForm.getReceiverAccount();
         senderAccount.setBalance(senderAccount.getBalance().subtract(transaction.getAmount()));
+        senderAccount.setUpdatedAt(new Date(System.currentTimeMillis()));
         receiverAccount.setBalance(receiverAccount.getBalance().add(transaction.getAmount()));
+        receiverAccount.setUpdatedAt(new Date(System.currentTimeMillis()));
         transaction.setTransactionStatus(TransactionStatus.COMMITTED);
         transaction.setCompletedAt(new Date(System.currentTimeMillis()));
         saveTransaction(transaction);

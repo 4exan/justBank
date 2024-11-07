@@ -220,6 +220,7 @@ public class AccountService {
         }
         Account account = accountRepository.findAccountByAccountNumber(accountNumber);
         account.setStatus(AccountStatus.SUSPENDED);
+        account.setUpdatedAt(new Date(System.currentTimeMillis()));
         saveAccount(account);
         return HttpStatus.OK;
     }
