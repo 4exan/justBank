@@ -13,10 +13,6 @@ import ua.kusakabe.entity.ValidationForm;
 import ua.kusakabe.entity.account.Account;
 import ua.kusakabe.repository.AccountRepository;
 import ua.kusakabe.repository.TransactionRepository;
-import ua.kusakabe.repository.account.CheckingAccountRepository;
-import ua.kusakabe.repository.account.CreditAccountRepository;
-import ua.kusakabe.repository.account.FixedDepositAccountRepository;
-import ua.kusakabe.repository.account.SavingsAccountRepository;
 import ua.kusakabe.util.AccountStatus;
 
 import java.math.BigDecimal;

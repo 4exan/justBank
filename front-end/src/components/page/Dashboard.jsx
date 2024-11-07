@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import AccountService from "../service/AccountService";
 import TransactionService from "../service/TransactionService";
+import TransactionModal from "../modal/CreateTransactionModal";
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -13,6 +14,7 @@ export default function Dashboard() {
   const [incomingTransactions, setIncomingTransactions] = useState([]);
   const [outgoingTransactions, setOutgoingTransactions] = useState([]);
   const [transactionStatistic, setTransactionStatistic] = useState({});
+  const [isModalOpen, setisModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -84,9 +86,19 @@ export default function Dashboard() {
     console.log(`Selected type: ${transactionsType}`);
   };
 
+  const toggleIsOpen = () => {
+    setisModalOpen(() => !isModalOpen);
+  };
+
   if (!loading) {
     return (
       <>
+        <TransactionModal
+          isOpen={isModalOpen}
+          setIsOpen={toggleIsOpen}
+          accountNumber={activeAccount.accountNumber}
+          accountCurrency={activeAccount.currency}
+        />
         <div className="px-4">
           <ul className="flex">
             <li>
@@ -105,7 +117,7 @@ export default function Dashboard() {
             </li>
             <li className="ml-auto">
               <button
-                className="p-2 text-text font-semibold bg-red-500 rounded-xl transition-all hover:bg-white hover:text-base"
+                className="p-2 text-text font-semibold bg-customred rounded-xl transition-all hover:bg-white hover:text-base"
                 onClick={logout}
               >
                 Logout
@@ -198,6 +210,14 @@ export default function Dashboard() {
                   <span className="font-normal">{activeAccount.type}</span>
                 </p>
               </div>
+              <div className="p-2">
+                <button
+                  className="bg-green-1 p-2 text-base text-3xl rounded-xl transition-all hover:bg-white"
+                  onClick={toggleIsOpen}
+                >
+                  Create new transaction
+                </button>
+              </div>
             </div>
             {/* RIGHT SEGMENT */}
             <div className="w-1/3">
@@ -237,13 +257,18 @@ export default function Dashboard() {
                       ))
                     : outgoingTransactions.map((t) => (
                         <div
-                          className={`bg-white bg-opacity-5 rounded-3xl p-2 my-2`}
+                          className={`bg-white bg-opacity-5 rounded-3xl p-2 my-2 flex`}
                         >
                           <p className="text-subtext text-lg">
-                            {t.transactionType} {t.receiverAccount} {t.amount}{" "}
-                            {t.currency} {t.transactionStatus} {t.completedAt}{" "}
+                            <span className="text-lg font-semibold text-customred">
+                              -{" "}
+                            </span>
+                            <span className="text-text">
+                              {t.amount} {t.currency}
+                            </span>{" "}
                             {t.description}
                           </p>
+                          <button className="ml-auto px-2 bg-green-1 rounded-full transition-all hover:bg-white hover:text-base">{`>`}</button>
                         </div>
                       ))}
                 </div>

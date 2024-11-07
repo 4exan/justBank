@@ -18,4 +18,17 @@ export default class TransactionService {
       throw err;
     }
   }
+
+  static async createTransaction(token, formData) {
+    try {
+      const response = await axios.post(`${this.BASE_URL}/create`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
