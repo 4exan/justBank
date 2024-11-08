@@ -13,4 +13,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findCustomerByPhone(String phone);
     @Query("select case when c.role='ADMIN' then true else false end from Customer c where c.phone=:phoneNumber")
     boolean isAdminByPhone(@Param("phoneNumber") String phone);
+    Customer findById(long id);
 }

@@ -23,13 +23,15 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final NotificationService notificationService;
     private final Logger LOGGER = LoggerFactory.getLogger(TransactionService.class);
     private String failureReason;
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository) {
+    public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository, NotificationService notificationService) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -56,16 +58,32 @@ public class TransactionService {
         Transaction transaction = validationForm.getTransaction();
         Account senderAccount = validationForm.getSenderAccount();
         Account receiverAccount = validationForm.getReceiverAccount();
-        senderAccount.setBalance(senderAccount.getBalance().subtract(transaction.getAmount()));
-        senderAccount.setUpdatedAt(new Date(System.currentTimeMillis()));
-        receiverAccount.setBalance(receiverAccount.getBalance().add(transaction.getAmount()));
-        receiverAccount.setUpdatedAt(new Date(System.currentTimeMillis()));
+
+        updateSenderAccount(senderAccount, transaction);
+        updateReceiverAccount(receiverAccount, transaction);
+        updateTransaction(transaction);
+        LOGGER.info("Transaction {} successfully commited", transaction.getId());
+        notificationService.sendNotification(transaction);
+    }
+
+    private void updateTransaction(Transaction transaction) {
         transaction.setTransactionStatus(TransactionStatus.COMMITTED);
         transaction.setCompletedAt(new Date(System.currentTimeMillis()));
         saveTransaction(transaction);
-        saveSenderAccount(senderAccount);
+    }
+
+    private void updateReceiverAccount(Account receiverAccount, Transaction transaction) {
+        BigDecimal newReceiverBalance = receiverAccount.getBalance().add(transaction.getAmount());
+        receiverAccount.setBalance(newReceiverBalance);
+        receiverAccount.setUpdatedAt(new Date(System.currentTimeMillis()));
         saveReceiverAccount(receiverAccount);
-        LOGGER.info("Transaction {} successfully commited", transaction.getId());
+    }
+
+    private void updateSenderAccount(Account senderAccount, Transaction transaction) {
+        BigDecimal newSenderBalance = senderAccount.getBalance().subtract(transaction.getAmount());
+        senderAccount.setBalance(newSenderBalance);
+        senderAccount.setUpdatedAt(new Date(System.currentTimeMillis()));
+        saveSenderAccount(senderAccount);
     }
 
     private void saveReceiverAccount(Account receiverAccount) {

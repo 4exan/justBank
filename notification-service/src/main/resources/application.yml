@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: account-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/justbank
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: notificationGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+#  mail:
+#    host: smtp.gmail.com
+#    username: ***
+#    password: ***
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#    port: 587
+#    test-connection: true
+server:
+  port: 8084
+eureka:
+  instance:
+    hostname: localhost
+
