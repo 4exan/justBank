@@ -23,7 +23,8 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/"
-                className="p-2 text-base bg-green-1 rounded-full transition-all hover:bg-white hover:text-base"
+                className={`${activePage === "Home" ? "bg-white text-base" : "bg-green-1 text-base"} py-2 px-4 rounded-full transition-all`}
+                onClick={(e) => setActivePage(e.target.innerText)}
               >{`Home`}</Link>
             </li>
           }

@@ -6,6 +6,7 @@ import Navbar from "./components/common/Navbar";
 import HomePage from "./components/page/HomePage";
 import ErrorPage from "./components/page/ErrorPage";
 import Dashboard from "./components/page/Dashboard";
+import Pocket from "./components/page/Pocket";
 import PremiumPage from "./components/page/PremiumPage";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/pocket" element={<Pocket />} />
             <Route path="/premium" element={<PremiumPage />} />
             {isAuthenticated && <>{/* Routes for authenticated users*/}</>}
             {/* Check if user is authenticated and admin before rendering admin-only routes */}

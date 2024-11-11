@@ -124,19 +124,19 @@ export default function Dashboard() {
               <div className="p-2 rounded-xl text-subtext">
                 <p>
                   <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
-                    USD/UAH - 41.34
+                    USD/UAH - <span className="text-green-1">41.34₴</span>
                   </span>
                   <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
-                    JPY/UAH - 0.27
+                    JPY/UAH - <span className="text-green-1">0.27₴</span>
                   </span>
                   <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
-                    EUR/UAH - 44.08
+                    EUR/UAH - <span className="text-customred">44.08₴</span>
                   </span>
                   <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
-                    EUR/UAH - 44.08
+                    EUR/UAH - <span className="text-green-1">44.08₴</span>
                   </span>
                   <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
-                    CHF/UAH - 46.99
+                    CHF/UAH - <span className="text-customred">46.99₴</span>
                   </span>
                 </p>
               </div>
@@ -168,6 +168,7 @@ export default function Dashboard() {
                     <div className="py-2 flex justify-between text-subtext border-b border-gray-500">
                       <p className="text-xl inline">Income:</p>
                       <p className="text-3xl inline ml-auto">
+                        <span className="text-green-0 mr-2">+</span>
                         {transactionStatistic.monthTotalIncome}{" "}
                         <span className="text-lg">
                           {activeAccount.currency}
@@ -177,6 +178,7 @@ export default function Dashboard() {
                     <div className="py-2 flex justify-between text-subtext">
                       <p className="text-xl inline">Spending:</p>
                       <p className="text-3xl inline ml-auto">
+                        <span className="text-customred mr-2">-</span>
                         {transactionStatistic.monthTotalSpending}{" "}
                         <span className="text-lg">
                           {activeAccount.currency}
@@ -193,6 +195,7 @@ export default function Dashboard() {
                   <div className="py-2 flex justify-between text-subtext border-b border-gray-500">
                     <p className="text-xl inline">Income:</p>
                     <p className="text-3xl inline ml-auto">
+                      <span className="text-green-0 mr-2">+</span>
                       {transactionStatistic.lastMonthTotalIncome}{" "}
                       <span className="text-lg">{activeAccount.currency}</span>
                     </p>
@@ -200,6 +203,7 @@ export default function Dashboard() {
                   <div className="py-2 flex justify-between text-subtext">
                     <p className="text-xl inline">Spending:</p>
                     <p className="text-3xl inline ml-auto">
+                      <span className="text-customred mr-2">-</span>
                       {transactionStatistic.lastMonthTotalSpending}{" "}
                       <span className="text-lg">{activeAccount.currency}</span>
                     </p>
