@@ -264,8 +264,9 @@ export default function Dashboard() {
                   </li>
                 </ul>
                 <div className=" my-2 p-2 rounded-xl">
-                  {transactionsType === "Incoming"
-                    ? incomingTransactions.map((t) => (
+                  {transactionsType === "Incoming" ? (
+                    incomingTransactions.length != 0 ? (
+                      incomingTransactions.map((t) => (
                         <div
                           className={`bg-white bg-opacity-5 rounded-3xl p-2 my-2 flex`}
                         >
@@ -281,22 +282,33 @@ export default function Dashboard() {
                           <button className="ml-auto px-2 bg-green-1 rounded-full transition-all hover:bg-white hover:text-base">{`>`}</button>
                         </div>
                       ))
-                    : outgoingTransactions.map((t) => (
-                        <div
-                          className={`bg-white bg-opacity-5 rounded-3xl p-2 my-2 flex`}
-                        >
-                          <p className="text-subtext text-lg">
-                            <span className="text-lg font-semibold text-customred">
-                              -{" "}
-                            </span>
-                            <span className="text-text">
-                              {t.amount} {t.currency}
-                            </span>{" "}
-                            {t.description}
-                          </p>
-                          <button className="ml-auto px-2 bg-green-1 rounded-full transition-all hover:bg-white hover:text-base">{`>`}</button>
-                        </div>
-                      ))}
+                    ) : (
+                      <p className="text-center text-lg text-subtext">
+                        No transactions
+                      </p>
+                    )
+                  ) : outgoingTransactions.length != 0 ? (
+                    outgoingTransactions.map((t) => (
+                      <div
+                        className={`bg-white bg-opacity-5 rounded-3xl p-2 my-2 flex`}
+                      >
+                        <p className="text-subtext text-lg">
+                          <span className="text-lg font-semibold text-customred">
+                            -{" "}
+                          </span>
+                          <span className="text-text">
+                            {t.amount} {t.currency}
+                          </span>{" "}
+                          {t.description}
+                        </p>
+                        <button className="ml-auto px-2 bg-green-1 rounded-full transition-all hover:bg-white hover:text-base">{`>`}</button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-lg text-subtext">
+                      No transactions
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
