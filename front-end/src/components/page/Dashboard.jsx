@@ -9,6 +9,7 @@ export default function Dashboard() {
   const { logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
+  const [sortedAccounts, setSortedAccounts] = useState([]);
   const [activeAccount, setActiveAccount] = useState({});
   const [transactionsType, setTransactionsType] = useState("Incoming");
   const [incomingTransactions, setIncomingTransactions] = useState([]);
@@ -59,7 +60,11 @@ export default function Dashboard() {
       const token = localStorage.getItem("token");
       const accountData = await AccountService.getMyAccounts(token);
       if (accountData?.accountList) {
+        console.log(accountData.accountList);
         setAccounts(() => accountData.accountList);
+        setSortedAccounts(() =>
+          accountData.accountList.sort((a, b) => a.accountId - b.accountId),
+        );
         setActiveAccount(() => accountData.accountList[0]);
         console.log(accounts);
       } else {
@@ -107,13 +112,34 @@ export default function Dashboard() {
                 onChange={(e) => handleAccountChange(e)}
                 value={activeAccount.accountNumber}
               >
-                {accounts.map((account) => (
+                {sortedAccounts.map((account) => (
                   <option
                     key={account.accountId}
                     value={account.accountNumber}
                   >{`${account.type} ${account.currency} ${account.accountNumber}`}</option>
                 ))}
               </select>
+            </li>
+            <li className="ml-auto">
+              <div className="p-2 rounded-xl text-subtext">
+                <p>
+                  <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
+                    USD/UAH - 41.34
+                  </span>
+                  <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
+                    JPY/UAH - 0.27
+                  </span>
+                  <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
+                    EUR/UAH - 44.08
+                  </span>
+                  <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
+                    EUR/UAH - 44.08
+                  </span>
+                  <span className="mr-2 bg-white bg-opacity-5 p-2 rounded-xl">
+                    CHF/UAH - 46.99
+                  </span>
+                </p>
+              </div>
             </li>
             <li className="ml-auto">
               <button
