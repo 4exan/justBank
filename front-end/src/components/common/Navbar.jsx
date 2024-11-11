@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import LoginModal from "../modal/LoginModal";
 
 export default function Navbar() {
-  const [activePage, setActivePage] = useState("dashboard");
+  const [activePage, setActivePage] = useState("Dashboard");
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const { isAuthenticated, isAdmin } = useAuth();
@@ -31,7 +31,8 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/dashboard"
-                className={`py-2 px-4 bg-white bg-opacity-5 text-subtext rounded-full transition-all hover:bg-white hover:text-base`}
+                className={`${activePage === "Dashboard" ? "bg-opacity-100 text-base" : "bg-opacity-5 text-subtext"} py-2 px-4 bg-white rounded-full transition-all`}
+                onClick={(e) => setActivePage(e.target.innerText)}
               >
                 Dashboard
               </Link>
@@ -41,7 +42,8 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/pocket"
-                className="py-2 px-4 bg-surface-1 text-subtext shadow-lg rounded-full transition-all hover:bg-white hover:text-base"
+                className={`${activePage === "Pocket" ? "bg-opacity-100 text-base" : "bg-opacity-5 text-subtext"} py-2 px-4 bg-white rounded-full transition-all`}
+                onClick={(e) => setActivePage(e.target.innerText)}
               >
                 Pocket
               </Link>
@@ -51,7 +53,8 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/investment"
-                className="py-2 px-4 bg-surface-1 text-subtext shadow-lg rounded-full transition-all hover:bg-white hover:text-base"
+                className={`${activePage === "Investment" ? "bg-opacity-100 text-base" : "bg-opacity-5 text-subtext"} py-2 px-4 bg-white rounded-full transition-all`}
+                onClick={(e) => setActivePage(e.target.innerText)}
               >
                 Investment
               </Link>
@@ -61,7 +64,8 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/search"
-                className="py-2 px-4 bg-surface-1 text-subtext shadow-lg rounded-full transition-all hover:bg-white hover:text-base"
+                className={`${activePage === "Search" ? "bg-opacity-100 text-base" : "bg-opacity-5 text-subtext"} py-2 px-4 bg-white rounded-full transition-all`}
+                onClick={(e) => setActivePage(e.target.innerText)}
               >
                 Search
               </Link>
@@ -71,7 +75,8 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/notification"
-                className="py-2 px-4 bg-surface-1 text-subtext shadow-lg rounded-full transition-all hover:bg-white hover:text-base"
+                className={`${activePage === "Notification" ? "bg-opacity-100 text-base" : "bg-opacity-5 text-subtext"} py-2 px-4 bg-white rounded-full transition-all`}
+                onClick={(e) => setActivePage(e.target.innerText)}
               >
                 Notification
               </Link>
@@ -81,7 +86,8 @@ export default function Navbar() {
             <li className="mr-2 inline">
               <Link
                 to="/settings"
-                className="py-2 px-4 bg-surface-1 text-subtext shadow-lg rounded-full transition-all hover:bg-white hover:text-base"
+                className={`${activePage === "Settings" ? "bg-opacity-100 text-base" : "bg-opacity-5 text-subtext"} py-2 px-4 bg-white rounded-full transition-all`}
+                onClick={(e) => setActivePage(e.target.innerText)}
               >
                 Settings
               </Link>
