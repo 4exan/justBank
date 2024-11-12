@@ -1,5 +1,5 @@
 package ua.kusakabe.util;
 
-public enum AccountCurrency {
+public enum Currency {
     UAH,USD,EUR,JPY,CHF,PLN
 }

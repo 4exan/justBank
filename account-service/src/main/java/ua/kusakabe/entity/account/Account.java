@@ -2,7 +2,7 @@ package ua.kusakabe.entity.account;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ua.kusakabe.util.AccountCurrency;
+import ua.kusakabe.util.Currency;
 import ua.kusakabe.util.AccountStatus;
 import ua.kusakabe.util.AccountType;
 
@@ -21,7 +21,7 @@ public abstract class Account {
     private String accountNumber;
     private long userId;
     private AccountType type;
-    private AccountCurrency currency;
+    private Currency currency;
     private BigDecimal balance;
     private Date createdAt;
     private Date updatedAt;
@@ -53,7 +53,7 @@ public abstract class Account {
         private String accountNumber;
         private long userId;
         private AccountType type;
-        private AccountCurrency currency;
+        private Currency currency;
         private BigDecimal balance;
         private Date createdAt;
         private Date updatedAt;
@@ -82,7 +82,7 @@ public abstract class Account {
             return self();
         }
 
-        public B currency(AccountCurrency currency) {
+        public B currency(Currency currency) {
             this.currency = currency;
             return self();
         }
