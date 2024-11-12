@@ -5,7 +5,7 @@ import AccountService from "../service/AccountService";
 import TransactionService from "../service/TransactionService";
 import TransactionModal from "../modal/CreateTransactionModal";
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const { logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);

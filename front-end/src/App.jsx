@@ -5,8 +5,8 @@ import { useAuth } from "./components/context/AuthContext";
 import Navbar from "./components/common/Navbar";
 import HomePage from "./components/page/HomePage";
 import ErrorPage from "./components/page/ErrorPage";
-import Dashboard from "./components/page/Dashboard";
-import Pocket from "./components/page/Pocket";
+import Dashboard from "./components/page/DashboardPage";
+import Pocket from "./components/page/PocketPage";
 import PremiumPage from "./components/page/PremiumPage";
 
 function App() {

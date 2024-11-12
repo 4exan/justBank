@@ -2,6 +2,7 @@ package ua.kusakabe.entity.account;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,8 @@ import java.util.Date;
 @Getter @Setter
 public class Pocket extends Account {
 
+    @Size(min = 3, max = 50)
+    private String name;
     private Date targetDate;
     private BigDecimal targetAmount;
     private boolean autoDepositEnabled;
@@ -20,6 +23,7 @@ public class Pocket extends Account {
 
     private Pocket(Pocket.Builder builder) {
         super(builder);
+        this.name = builder.name;
         this.targetDate = builder.targetDate;
         this.targetAmount = builder.targetAmount;
         this.autoDepositEnabled = builder.autoDepositEnabled;
@@ -31,10 +35,16 @@ public class Pocket extends Account {
     }
 
     public static class Builder extends Account.Builder<Pocket.Builder> {
+        private String name;
         private Date targetDate;
         private BigDecimal targetAmount;
         private boolean autoDepositEnabled;
         private BigDecimal autoDepositAmount;
+
+        public Pocket.Builder name(String name) {
+            this.name = name;
+            return this;
+        }
 
         public Pocket.Builder targetDate(Date targetDate) {
             this.targetDate = targetDate;

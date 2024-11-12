@@ -40,6 +40,7 @@ public class AccountDto {
     private boolean active;
     private boolean twoFactorEnabled;
 
+    private String name;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private Date targetDate;
     private BigDecimal targetAmount;

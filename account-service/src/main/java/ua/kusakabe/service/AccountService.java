@@ -113,6 +113,7 @@ public class AccountService {
                 .accountNumber(generateAccountNumber(AccountType.POCKET))
                 .type(AccountType.POCKET)
                 .currency(req.getCurrency())
+                .name(req.getName())
                 .balance(BigDecimal.ZERO)
                 .createdAt(new Date(System.currentTimeMillis()))
                 .updatedAt(new Date(System.currentTimeMillis()))

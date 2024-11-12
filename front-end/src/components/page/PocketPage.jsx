@@ -1,12 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import PocketService from "../service/PocketService";
+import Pocket from "../common/Pocket";
 
-export default function Pocket() {
+export default function PocketPage() {
   const [loading, setLoading] = useState(true);
-  const [companies, setCompanies] = useState([]);
-  const [myShares, setMyShares] = useState([]);
-  const [accounts, setAccounts] = useState([]);
+  const [pocketList, setPocketList] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -15,11 +15,10 @@ export default function Pocket() {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const [companiesData, sharesData, accountsData] = await Promise.all([
-        fetchCompaniesData(),
-        fetchSharesData(),
-        fetchAccountsData(),
-      ]);
+      const pocketData = await PocketService.getMyPockets(token);
+      if (pocketData?.pocketList) {
+        setPocketList(() => pocketData.pocketList);
+      }
     } catch (e) {
       throw e;
     } finally {
@@ -30,7 +29,11 @@ export default function Pocket() {
   if (!loading) {
     return (
       <>
-        <p>Pocket</p>
+        <div className="py-2 px-4">
+          {pocketList.map((pocket) => (
+            <Pocket pocket={pocket} key={pocket.accountId} />
+          ))}
+        </div>
       </>
     );
   } else {

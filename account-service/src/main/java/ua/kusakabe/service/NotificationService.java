@@ -26,7 +26,8 @@ public class NotificationService {
 
     public void sendNotification(Transaction transaction) {
         buildNotification(transaction);
-        notificationProducer.sendMessage(notification);
+//        notificationProducer.sendMessage(notification);
+        System.out.println("Imagine that notification is send...");
     }
 
     private void buildNotification(Transaction transaction) {
