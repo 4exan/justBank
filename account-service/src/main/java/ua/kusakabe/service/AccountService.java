@@ -1,9 +1,10 @@
 package ua.kusakabe.service;
 
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ua.kusakabe.dto.AccountDto;
@@ -50,7 +51,21 @@ public class AccountService {
         this.jwtService = jwtService;
     }
 
+    @Cacheable("account")
     public AccountDto getCustomerAccount(String header) {
+        long userId = getUserIdFromToken(header);
+        List<Account> accountList = accountRepository.findAllByUserIdAndTypeNot(userId, AccountType.POCKET);
+        if(!accountList.isEmpty()){
+            AccountDto res = new AccountDto();
+            res.setAccountList(accountList);
+            return res;
+        }else {
+            throw new RuntimeException("No account found for user id " + userId);
+        }
+    }
+
+    @CachePut("data")
+    public AccountDto update(String header) {
         long userId = getUserIdFromToken(header);
         List<Account> accountList = accountRepository.findAllByUserIdAndTypeNot(userId, AccountType.POCKET);
         if(!accountList.isEmpty()){
@@ -271,6 +286,7 @@ public class AccountService {
         return customerRepository.isAdminByPhone(phone);
     }
 
+    @Cacheable("pocket")
     public AccountDto getPockets(String header) {
         long userId = getUserIdFromToken(header);
         List<Account> pocketList = accountRepository.findAllByUserIdAndType(userId, AccountType.POCKET);

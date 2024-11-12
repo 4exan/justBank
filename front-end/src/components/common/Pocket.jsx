@@ -1,9 +1,13 @@
 import React from "react";
 
 export default function Pocket({ pocket }) {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(pocket.accountNumber);
+  };
+
   return (
     <>
-      <div className="p-2 max-w-96 max-h-1/3 bg-surface-0 rounded-lg text-subtext">
+      <div className="p-2 w-96 h-40 max-w-96 max-h-1/3 bg-surface-0 rounded-lg text-subtext">
         <ul className="flex justify-between">
           <li>
             <p className="text-subtext text-opacity-35">
@@ -14,9 +18,7 @@ export default function Pocket({ pocket }) {
             <button
               className="text-subtext text-opacity-35 transition-all hover:text-opacity-100 hover:text-white"
               placeholder="Copy"
-              onClick={() => {
-                navigator.clipboard.writeText(pocket.accountNumber);
-              }}
+              onClick={handleCopy}
             >
               Copy
             </button>

@@ -41,7 +41,7 @@ public class AccountDto {
     private boolean twoFactorEnabled;
 
     private String name;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-mm-dd")
     private Date targetDate;
     private BigDecimal targetAmount;
     private boolean autoDepositEnabled;

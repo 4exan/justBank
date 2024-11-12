@@ -35,7 +35,7 @@ export default function ({ isOpen, setIsOpen }) {
     <>
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-base border border-surface-1 p-6 rounded w-fit">
+          <div className="bg-surface-0 border border-surface-1 p-6 rounded w-fit">
             <div className="flex justify-between p-2">
               <p className="text-3xl text-text font-semibold">Login</p>
               <button
