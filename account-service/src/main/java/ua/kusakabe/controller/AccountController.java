@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.kusakabe.dto.AccountDto;
 import ua.kusakabe.service.AccountService;
 
-import java.net.http.HttpResponse;
-
 @RestController
 @RequestMapping("/api/v1/account")
 public class AccountController {
@@ -29,6 +27,16 @@ public class AccountController {
     @PostMapping("/create")
     public HttpStatus createAccount(@RequestHeader(HttpHeaders.AUTHORIZATION) String header, @RequestBody AccountDto req) {
         return accountService.createNewAccount(req, header);
+    }
+
+    @GetMapping("/pockets")
+    public ResponseEntity<AccountDto> getPockets(@RequestHeader(HttpHeaders.AUTHORIZATION) String header){
+        return ResponseEntity.ok(accountService.getPockets(header));
+    }
+
+    @DeleteMapping("/suspend/{id}")
+    public HttpStatus deleteAccount(@RequestHeader(HttpHeaders.AUTHORIZATION) String header, @PathVariable String accountNumber) {
+        return accountService.suspendAccount(header, accountNumber);
     }
 
 }

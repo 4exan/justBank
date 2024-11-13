@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export default class AuthService {
-  static BASE_URL = "http://localhost:8765";
+  static BASE_URL = "http://localhost:8765/api/v1/auth";
 
-  static async registration(userData, token) {
+  static async registration(userData) {
     try {
       const response = await axios.post(
-        `${this.BASE_URL}/auth/registration`,
+        `${this.BASE_URL}/registration`,
         userData,
       );
       return response.data;
@@ -15,10 +15,10 @@ export default class AuthService {
     }
   }
 
-  static async login(username, password) {
+  static async login(phone, password) {
     try {
-      const response = await axios.post(`${AuthService.BASE_URL}/auth/login`, {
-        username,
+      const response = await axios.post(`${AuthService.BASE_URL}/login`, {
+        phone,
         password,
       });
       return response.data;
@@ -27,21 +27,10 @@ export default class AuthService {
     }
   }
 
-  static async getMyProfile(token) {
-    try {
-      const response = await axios.get(`${AuthService.BASE_URL}/auth/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   static async tokenValidation(token) {
     try {
       const response = await axios.post(
-        `${AuthService.BASE_URL}/auth/validate`,
+        `${AuthService.BASE_URL}/validate`,
         token,
       );
       return response.data;

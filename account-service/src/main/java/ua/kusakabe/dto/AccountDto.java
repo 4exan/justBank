@@ -1,13 +1,13 @@
 package ua.kusakabe.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import ua.kusakabe.entity.account.Account;
-import ua.kusakabe.util.AccountCurrency;
+import ua.kusakabe.util.Currency;
 import ua.kusakabe.util.AccountStatus;
 import ua.kusakabe.util.AccountType;
 
@@ -23,9 +23,9 @@ public class AccountDto {
 
     private long accountId;
     private long userId;
-    private String number;
+    private String accountNumber;
     private AccountType type;
-    private AccountCurrency currency;
+    private Currency currency;
     private BigDecimal balance;
     private Date createdAt;
     private Date updatedAt;
@@ -40,6 +40,14 @@ public class AccountDto {
     private boolean active;
     private boolean twoFactorEnabled;
 
+    private String name;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-mm-dd")
+    private Date targetDate;
+    private BigDecimal targetAmount;
+    private boolean autoDepositEnabled;
+    private BigDecimal autoDepositAmount;
+
     private List<Account> accountList;
+    private List<Account> pocketList;
 
 }

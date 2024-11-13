@@ -6,5 +6,5 @@ import ua.kusakabe.entity.account.FixedDepositAccount;
 
 @Repository
 public interface FixedDepositAccountRepository extends JpaRepository<FixedDepositAccount, Long> {
-    boolean existsByNumber(String number);
+    boolean existsByAccountNumber(String accountNumber);
 }

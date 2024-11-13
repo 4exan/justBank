@@ -9,13 +9,11 @@ import lombok.*;
 @Getter @Setter
 public class SavingsAccount extends Account {
 
-    private String number;
     private double interestRate;
     private int transactionLimit;
 
     private SavingsAccount(Builder builder) {
         super(builder);
-        this.number = builder.number;
         this.interestRate = builder.interestRate;
         this.transactionLimit = builder.transactionLimit;
     }
@@ -25,14 +23,8 @@ public class SavingsAccount extends Account {
     }
 
     public static class Builder extends Account.Builder<Builder> {
-        private String number;
         private double interestRate;
         private int transactionLimit;
-
-        public Builder number(String number) {
-            this.number = number;
-            return this;
-        }
 
         public Builder interestRate(double interestRate) {
             this.interestRate = interestRate;

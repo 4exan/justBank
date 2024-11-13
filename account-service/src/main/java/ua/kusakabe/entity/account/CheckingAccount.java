@@ -11,12 +11,10 @@ import java.math.BigDecimal;
 @Getter @Setter
 public class CheckingAccount extends Account {
 
-    private String number;
     private double overdraftLimit;
 
     protected CheckingAccount(Builder builder) {
         super(builder);
-        this.number = builder.number;
         this.overdraftLimit = builder.overdraftLimit;
     }
 
@@ -25,16 +23,10 @@ public class CheckingAccount extends Account {
     }
 
     public static class Builder extends Account.Builder<Builder> {
-        private String number;
         private double overdraftLimit;
 
         public Builder overdraftLimit(double overdraftLimit) {
             this.overdraftLimit = overdraftLimit;
-            return this;
-        }
-
-        public Builder number(String number) {
-            this.number = number;
             return this;
         }
 
